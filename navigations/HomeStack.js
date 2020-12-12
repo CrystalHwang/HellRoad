@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeScreen from '../screen/HomeScreen';
@@ -9,6 +9,7 @@ import WalkingScreen from '../screen/WalkingScreen';
 import MenuIcon from '../components/MenuIcon';
 import { COLOR } from '../constants';
 
+const { width, height } = Dimensions.get('window');
 const HomeStack = createStackNavigator();
 
 const HomeStackNavigator = ({ navigation }) => {
@@ -16,15 +17,19 @@ const HomeStackNavigator = ({ navigation }) => {
   return (
     <HomeStack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: 'pink' },
-        headerLeft: () => <MenuIcon navigation={navigation} />
+        headerStyle: {
+          backgroundColor: COLOR.DARK_GREY,
+          height: height * 0.1,
+        },
+        headerTintColor: COLOR.WHITE,
+        headerLeft: () => <MenuIcon navigation={navigation} />,
       }}>
       <HomeStack.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          headerTintColor: 'white',
-          headerStyle: { backgroundColor: COLOR.MAIN },
+          // headerTintColor: COLOR.WHITE,
+          //headerStyle: { backgroundColor: COLOR.MAIN_GREY },
         }}
       />
       <HomeStack.Screen
@@ -32,7 +37,7 @@ const HomeStackNavigator = ({ navigation }) => {
         component={SearchScreen}
         options={{
           headerTintColor: 'white',
-          headerStyle: { backgroundColor: COLOR.MAIN }
+          headerStyle: { backgroundColor: COLOR.MAIN_GREY }
         }}
       />
       <HomeStack.Screen
@@ -40,7 +45,7 @@ const HomeStackNavigator = ({ navigation }) => {
         component={WalkingScreen}
         options={{
           headerTintColor: 'white',
-          headerStyle: { backgroundColor: COLOR.MAIN }
+          headerStyle: { backgroundColor: COLOR.MAIN_GREY }
         }}
       />
     </HomeStack.Navigator >

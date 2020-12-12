@@ -1,41 +1,29 @@
-import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
-import { createDrawerNavigator, DrawerActions } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import { Provider } from 'react-redux';
+import { AppState } from 'react-native';
+import * as TaskManager from 'expo-task-manager';
 
-import HomeStack from './navigations/HomeStack';
-import CovidZoneStack from './navigations/CovidZoneStack';
-import CrimeZoneStack from './navigations/CrimeZoneStack';
-import AboutStack from './navigations/AboutStack';
-
-const Drawer = createDrawerNavigator();
+import AppContainer from './containers/AppContainer';
+import { BACKGROUND_LOCATION_TASK } from './constants';
+import store from './store.js';
 
 const App = () => {
-
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        initialRouteName="Home"
-      // drawerContent={(props) => <DrawerContainer {...props} />}
-      >
-        <Drawer.Screen
-          name="Home"
-          component={HomeStack} />
-        <Drawer.Screen name="COVID-19 Zone" component={CovidZoneStack} />
-        <Drawer.Screen name="Crime Zone" component={CrimeZoneStack} />
-        <Drawer.Screen name="About" component={AboutStack} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <AppContainer />
+    </Provider>
   );
 };
 
-const styles = StyleSheet.create({
-  homeStackNavigator: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+TaskManager.defineTask(BACKGROUND_LOCATION_TASK, ({ data, error }) => {
+  if (error) {
+    return alert(error.message);
+  }
+
+
+  const { latitude, longitude } = data.locations[0].coords;
+  console.log("Appstate", AppState.currentState);
+  console.log("LOCATION?!! ", latitude, longitude);
 });
+
 export default App;
