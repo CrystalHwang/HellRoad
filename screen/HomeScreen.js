@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions, useWindowDimensions, Alert, Button } from 'react-native';
 import MapView, { Marker, Circle, Polyline } from 'react-native-maps';
 
@@ -12,6 +13,7 @@ const { width, height } = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }) => {
   const [covidStatusData, setCovidStatusData] = useState([]);
+  const currentLocation = useSelector(state => state.locationReducer);
 
   useEffect(() => {
     (async () => {
@@ -22,29 +24,17 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.covidNoticeBoard}>
-        {covidStatusData.map((data, index) => {
-          return (
-            <View key={index}>
-              <Text>{data.title}</Text>
-              <Text>{data.total}</Text>
-              <Text>{data.variation}</Text>
-            </View>
-          );
-        })}
-      </View> */}
       <CovidNoticeBoard />
       <View style={styles.wrap}>
         <MapView
           style={styles.map}
           maxZoomLevel={20}
           initialRegion={{
-            latitude: USER_LOCATION.LATITUDE,
-            longitude: USER_LOCATION.LONGITUDE,
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
             latitudeDelta: 0,
             longitudeDelta: 0.009
-          }}
-        >
+          }}>
           <Polyline
             coordinates={[
               { latitude: 37.50610, longitude: 127.05913 },
@@ -56,8 +46,8 @@ const HomeScreen = ({ navigation }) => {
           <Circle
             key='1'
             center={{
-              latitude: USER_LOCATION.LATITUDE,
-              longitude: USER_LOCATION.LONGITUDE
+              latitude: currentLocation.latitude,
+              longitude: currentLocation.longitude,
             }}
             fillColor={'rgba(194,24,7,0.5)'}
             radius={200}
@@ -66,12 +56,11 @@ const HomeScreen = ({ navigation }) => {
           />
           <Marker
             coordinate={{
-              latitude: USER_LOCATION.LATITUDE,
-              longitude: USER_LOCATION.LONGITUDE
+              latitude: currentLocation.latitude,
+              longitude: currentLocation.longitude
             }}
           />
         </MapView>
-
         <Button
           title="안전경로찾기"
           onPress={() => {
