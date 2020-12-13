@@ -1,3 +1,4 @@
+import './shim';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { AppState } from 'react-native';
@@ -19,7 +20,6 @@ TaskManager.defineTask(BACKGROUND_LOCATION_TASK, ({ data, error }) => {
   if (error) {
     return alert(error.message);
   }
-
 
   const { latitude, longitude } = data.locations[0].coords;
   console.log("Appstate", AppState.currentState);
