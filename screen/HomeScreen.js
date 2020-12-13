@@ -1,17 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions, useWindowDimensions, Alert, Button } from 'react-native';
 import MapView, { Marker, Circle, Polyline } from 'react-native-maps';
 
+import getCovidStatusData from '../utils/scraper';
 import { COLOR, USER_LOCATION, DESTINATION } from '../constants';
-
 const { width, height } = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }) => {
+  const [covidStatusData, setCovidStatusData] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const data = await getCovidStatusData();
+      setCovidStatusData(data);
+    })();
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.covidNoticeBoard}>
         <Text> 코로나 대응 2.5단계 </Text>
+        {covidStatusData.map((data, index) => {
+          return (
+            <View key={index}>
+              <Text>{data.title}</Text>
+              <Text>{data.total}</Text>
+              <Text>{data.variation}</Text>
+            </View>
+          );
+        })}
       </View>
       <View style={styles.wrap}>
         <MapView
