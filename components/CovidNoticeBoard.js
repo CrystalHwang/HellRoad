@@ -43,8 +43,8 @@ const CovidNoticeBoard = () => {
             style={{
               width: '100%',
               height: height * 0.1,
-              borderColor: 'red',
-              borderWidth: 1,
+              // borderColor: 'red',
+              // borderWidth: 1,
               transform: [{ translateX: move.x, }, { translateY: move.y }]
             }}>
             <View style={styles.viewContainer}>
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.DARK_BLUE,
     overflow: 'hidden',
     elevation: 10,
+    borderRadius: 15,
   },
   viewContainer: {
     width: '100%',
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
     color: COLOR.WHITE,
   },
   total: {
-    flex: 2,
+    flex: 1,
     textAlign: 'center',
     fontSize: 25,
     fontWeight: 'bold',
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
   variationContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     alignItems: 'center',
     color: COLOR.WHITE
   },
@@ -103,8 +104,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     color: COLOR.WHITE,
+    marginRight: 10,
   },
   variation: {
+    fontSize: 20,
     color: COLOR.WHITE
   }
 });

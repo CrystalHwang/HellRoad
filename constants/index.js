@@ -9,17 +9,8 @@ export const COLOR = {
   LIGHT_BLUE: '#5472d3',
   MAIN_BLUE: '#0d47a1',
   DARK_BLUE: '#002171',
+  CLEAR_BLUE: 'rgba(84, 114, 210, 0.2)',
   WHITE: '#fafafa',
-};
-
-export const USER_LOCATION = {
-  LATITUDE: 37.50610,
-  LONGITUDE: 127.05913
-};
-
-export const DESTINATION = {
-  LATITUDE: 37.50885,
-  LONGITUDE: 127.06279
 };
 
 export const GRANTED = 'granted';
