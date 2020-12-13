@@ -1,15 +1,16 @@
 import 'react-native-gesture-handler';
 //import { StatusBar } from 'expo-status-bar';
 
-import React, { useState, useEffect, useCallback, useSelector } from 'react';
-import { StyleSheet, Dimensions, StatusBar } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { StyleSheet, Dimensions, StatusBar, AppState } from 'react-native';
 import { createDrawerNavigator, DrawerActions } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import { connect } from 'react-redux';
 
 import { AppLoading } from 'expo';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
+import * as TaskManager from 'expo-task-manager';
 
 import HomeStack from '../navigations/HomeStack';
 import CovidZoneStack from '../navigations/CovidZoneStack';
@@ -19,6 +20,7 @@ import AboutStack from '../navigations/AboutStack';
 import SideBarMenu from '../components/SideBarMenu';
 
 import { GRANTED, MESSAGE, BACKGROUND_LOCATION_TASK, COLOR } from '../constants';
+import * as actions from '../actions';
 
 const { width, height } = Dimensions.get('window');
 const Drawer = createDrawerNavigator();
@@ -36,6 +38,19 @@ const getPermission = async () => {
 const AppContainer = () => {
   const [isLoading, setIsLoading] = useState(true);
 
+  const currentLocation = useSelector(state => state.locationReducer);
+  const dispatch = useDispatch();
+
+  TaskManager.defineTask(BACKGROUND_LOCATION_TASK, ({ data, error }) => {
+    if (error) {
+      return alert(error.message);
+    }
+
+    const { latitude, longitude } = data.locations[0].coords;
+    console.log("Appstate", AppState.currentState);
+    console.log("LOCATION?!!", latitude, longitude);
+    dispatch(actions.updateLocation({ 'latitude': latitude, 'longitude': longitude }));
+  });
 
   useEffect(() => {
     StatusBar.setHidden(true);
@@ -88,39 +103,4 @@ const styles = StyleSheet.create({
   }
 });
 
-
-const mapStateToProps = (state) => {
-  // const { userReducer, memberInRoomReducer, messageListReducer } = state;
-
-  // return {
-  //   currentUser: userReducer,
-  //   isLoggedIn: userReducer.isLoggedIn,
-  //   memberInRoom: memberInRoomReducer,
-  //   messageList: messageListReducer.public,
-  //   secretMessageList: messageListReducer.secret
-  // };
-  return {
-
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  // return {
-  //   updateUserData: (userData) => { dispatch(createActionForUserData(userData)); },
-  //   addRooms: (addedRoomData) => { dispatch(createActionToAddRoom(addedRoomData)); },
-  //   deleteRooms: (id) => { dispatch(createActionToDeleteRoom(id)); },
-  //   addGroups: (addedGroupData) => { dispatch(createActionToAddGroup(addedGroupData)); },
-  //   deleteGroups: (arrayOfId) => { dispatch(createActionToDeleteGroups(arrayOfId)); },
-  //   addMembers: (groupId, allMemberData) => { dispatch(createActionToAddMembers(groupId, allMemberData)); },
-  //   deleteMembers: (groupId, arrayOfEmail) => { dispatch(createActionToDeleteMembers(groupId, arrayOfEmail)); },
-  //   joinMember: (socketId) => { dispatch(createActionToJoinMembersInRoom(socketId)); },
-  //   deleteLeavingMember: (socketId) => { dispatch(createActionToDeleteMembersInRoom(socketId)); },
-  //   addMessage: (message) => { dispatch(createActionToAddMessage(message)); },
-  //   addSecretMessage: (message) => { dispatch(createActionToSecretMessage(message)); }
-  // };
-  return {
-
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AppContainer);
+export default AppContainer;
