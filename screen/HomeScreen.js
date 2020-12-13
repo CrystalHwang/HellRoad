@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions, useWindowDimensions, Alert, Button } from 'react-native';
 import MapView, { Marker, Circle, Polyline } from 'react-native-maps';
 
+
+import covidNoticeBoard from '../components/CovidNoticeBoard';
+
 import getCovidStatusData from '../utils/scraper';
 import { COLOR, USER_LOCATION, DESTINATION } from '../constants';
+import CovidNoticeBoard from '../components/CovidNoticeBoard';
 const { width, height } = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }) => {
@@ -18,8 +22,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.covidNoticeBoard}>
-        <Text> 코로나 대응 2.5단계 </Text>
+      {/* <View style={styles.covidNoticeBoard}>
         {covidStatusData.map((data, index) => {
           return (
             <View key={index}>
@@ -29,7 +32,8 @@ const HomeScreen = ({ navigation }) => {
             </View>
           );
         })}
-      </View>
+      </View> */}
+      <CovidNoticeBoard />
       <View style={styles.wrap}>
         <MapView
           style={styles.map}
