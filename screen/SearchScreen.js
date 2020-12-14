@@ -36,16 +36,6 @@ const SearchScreen = ({ navigation }) => {
   const [boundingBox, setBoundingBox] = useState([]);
 
   useEffect(() => {
-    /*  expo  */
-    (async () => {
-      const tmp = await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
-        accuracy: Location.Accuracy.Highest,
-        timeInterval: 10,
-        distanceInterval: 0.1,
-        howsBackgroundLocationIndicator: true,
-      });
-    })();
-
     navigator.geolocation.getCurrentPosition((position) => {
 
       setFocusedLocation({
@@ -61,7 +51,6 @@ const SearchScreen = ({ navigation }) => {
       (err) => { console.error(err); },
       { enableHighAccuracy: true, timeout: 1000, maximumAge: 1000 },
     );
-    return async () => await Location.stopLocationUpdatesAsync(BACKGROUND_LOCATION_TASK);
   }, []);
 
   const getRoutes = async (departureLocation, destinationLocation) => {

@@ -4,7 +4,7 @@ import 'react-native-gesture-handler';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, Dimensions, StatusBar, AppState } from 'react-native';
-import { createDrawerNavigator, DrawerActions } from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { AppLoading } from 'expo';
@@ -26,13 +26,14 @@ const { width, height } = Dimensions.get('window');
 const Drawer = createDrawerNavigator();
 
 const getPermission = async () => {
-  const { status } = await Permissions.askAsync(
+  const { status, expires } = await Permissions.askAsync(
     Permissions.LOCATION
   );
 
   if (status !== GRANTED) {
     return alert(MESSAGE.PERMISSION_DENIED);
   }
+  console.log("STATUS", status, expires);
 };
 
 const AppContainer = () => {
@@ -59,7 +60,7 @@ const AppContainer = () => {
       const traceLocation = await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
         accuracy: Location.Accuracy.Highest,
         timeInterval: 100,
-        distanceInterval: 0.1,
+        distanceInterval: 0.001,
         howsBackgroundLocationIndicator: true,
         foregroundService: {
           notificationTitle: 'Hell路 에서',

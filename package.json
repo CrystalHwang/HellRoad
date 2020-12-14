@@ -50,6 +50,7 @@
     "react-native-gesture-handler": "^1.9.0",
     "react-native-level-fs": "^3.0.1",
     "react-native-loading-spinner-overlay": "^2.0.0",
+    "react-native-map-clustering": "^3.3.9",
     "react-native-maps": "^0.27.1",
     "react-native-os": "^1.2.6",
     "react-native-randombytes": "^3.6.0",
