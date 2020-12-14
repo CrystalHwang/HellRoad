@@ -36,16 +36,16 @@ const HomeStackNavigator = ({ navigation }) => {
         name="Search"
         component={SearchScreen}
         options={{
-          headerTintColor: 'white',
-          headerStyle: { backgroundColor: COLOR.MAIN_GREY }
+          //headerTintColor: 'white',
+          //headerStyle: { backgroundColor: COLOR.MAIN_GREY }
         }}
       />
       <HomeStack.Screen
         name="Walking"
         component={WalkingScreen}
         options={{
-          headerTintColor: 'white',
-          headerStyle: { backgroundColor: COLOR.MAIN_GREY }
+          //headerTintColor: 'white',
+          //headerStyle: { backgroundColor: COLOR.MAIN_GREY }
         }}
       />
     </HomeStack.Navigator >
