@@ -13,7 +13,27 @@ export const COLOR = {
   WHITE: '#fafafa',
 };
 
+export const DEFAULT_LOCATION = {
+  /* 바닐라코딩 위도 및 경도 */
+  latitude: 37.50607,
+  longitude: 127.05921
+};
+
+export const DELTA = {
+  LATITUDE_FOR_SMALL: 0.03,
+  LONGITUDE_FOR_SMALL: 0.03,
+  LATITUDE_FOR_BIG: 0.01,
+  LONGITUDE_FOR_BIG: 0.01
+};
+
+export const MAP_MODE = {
+  HOME: 'home',
+  SEARCH: 'search',
+  WALKING: 'walking'
+};
 export const GRANTED = 'granted';
+
+export const BACKGROUND_LOCATION_TASK = 'background-location-task';
 
 export const MESSAGE = {
   PERMISSION_DENIED: '위치 정보가 필요해요! 🌎',
@@ -21,4 +41,3 @@ export const MESSAGE = {
   DESTINATION_SKIPPED: '도착지를 입력하세요!'
 };
 
-export const BACKGROUND_LOCATION_TASK = 'background-location-task';

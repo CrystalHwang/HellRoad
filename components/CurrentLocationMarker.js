@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { COLOR } from '../constants';
 
 const CurrentLocationMarker = () => {
-  const currentLocation = useSelector(state => state.locationReducer);
+  const currentLocation = useSelector(state => state.locationReducer.current);
 
   return (
     <>
