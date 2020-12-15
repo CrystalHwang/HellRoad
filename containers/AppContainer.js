@@ -39,7 +39,7 @@ const getPermission = async () => {
 const AppContainer = () => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const currentLocation = useSelector(state => state.locationReducer);
+  const currentLocation = useSelector(state => state.locationReducer.current);
   const dispatch = useDispatch();
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, ({ data, error }) => {
@@ -50,7 +50,7 @@ const AppContainer = () => {
     const { latitude, longitude } = data.locations[0].coords;
     console.log("Appstate", AppState.currentState);
     console.log("LOCATION?!!", latitude, longitude);
-    dispatch(actions.updateLocation({ 'latitude': latitude, 'longitude': longitude }));
+    dispatch(actions.updateCurrentLocation({ 'latitude': latitude, 'longitude': longitude }));
   });
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const AppContainer = () => {
     (async () => {
       const traceLocation = await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
         accuracy: Location.Accuracy.Highest,
-        timeInterval: 100,
+        timeInterval: 5000,
         distanceInterval: 0.001,
         howsBackgroundLocationIndicator: true,
         foregroundService: {

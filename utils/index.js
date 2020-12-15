@@ -27,7 +27,7 @@ export const transformCoordinatesArrayForMapQuest = (arrayOfLatLng) => {
 export const transformCoordinatesArrayForTMap = (arrayOfPathObject) => {
   const coordinatesArray = [];
 
-  arrayOfPathObject.forEach((pathObject, index) => {
+  arrayOfPathObject?.forEach((pathObject, index) => {
     const pathData = pathObject.geometry.coordinates;
 
     if (Array.isArray(pathData[0])) {
@@ -53,6 +53,6 @@ export const transformCoordinatesArrayForTMap = (arrayOfPathObject) => {
       }
     }
   });
-  console.log("!!!!!TMAP!!!!!!", coordinatesArray.length, coordinatesArray);
+
   return coordinatesArray;
 };

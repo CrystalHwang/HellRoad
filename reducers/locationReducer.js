@@ -1,18 +1,39 @@
+import { DEFAULT_LOCATION } from '../constants';
 import {
-  LOCATION
+  CURRENT_LOCATION,
+  ORIGIN,
+  DESTINATION
 } from '../constants/actionTypes';
 
+const defaultLocationLatLng = {
+  latitude: DEFAULT_LOCATION.latitude,
+  longitude: DEFAULT_LOCATION.longitude
+};
+
 const initialState = {
-  latitude: 37.50607,
-  longitude: 127.05921
+  current: defaultLocationLatLng,
+  origin: defaultLocationLatLng,
+  destination: defaultLocationLatLng
 };
 
 const locationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOCATION:
+    case CURRENT_LOCATION:
       return {
         ...state,
-        ...action.payload
+        current: { ...action.payload }
+      };
+
+    case ORIGIN:
+      return {
+        ...state,
+        origin: { ...action.payload }
+      };
+
+    case DESTINATION:
+      return {
+        ...state,
+        destination: { ...action.payload }
       };
 
     default:
