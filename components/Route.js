@@ -4,32 +4,40 @@ import { StyleSheet, View, Dimensions, } from 'react-native';
 import MapView, { Marker, Circle, Polyline } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
+import OptimalRoute from './OptimalRoute';
+
 import { getRoutesFromAPIs } from '../api';
 import * as actions from '../actions';
-import { COLOR } from '../constants';
+import { COLOR, APIs, MAP_MODE } from '../constants';
 
 const { width, height } = Dimensions.get('window');
 
 const Route = ({
+  mode,
   originName,
-  destinationName
+  destinationName,
+  nameOfRenderingRoute
 }) => {
   const isLoadingRoutes = useSelector(state => state.loadingReducer.routes);
   const currentLocation = useSelector(state => state.locationReducer.current);
   const originLocation = useSelector(state => state.locationReducer.origin);
   const destinationLocation = useSelector(state => state.locationReducer.destination);
 
-  const mapBoxRoute = useSelector(state => state.routesReducer.mapBoxRoute);
-  const mapQuestRoute = useSelector(state => state.routesReducer.mapQuestRoute);
-  const tMapRouteDefault = useSelector(state => state.routesReducer.tMapRouteDefault);
-  const tMapRouteBigRoad = useSelector(state => state.routesReducer.tMapRouteBigRoad);
-  const tMapRouteShortest = useSelector(state => state.routesReducer.tMapRouteShortest);
-  const tMapRouteExceptStairs = useSelector(state => state.routesReducer.tMapRouteExceptStairs);
+  const mapBoxRoute = useSelector(state => state.routesReducer.mapBox.route);
+  const mapQuestRoute = useSelector(state => state.routesReducer.mapQuest.route);
+  const tMapRouteDefault = useSelector(state => state.routesReducer.tMapDefault.route);
+  const tMapRouteBigRoad = useSelector(state => state.routesReducer.tMapBigRoad.route);
+  const tMapRouteShortest = useSelector(state => state.routesReducer.tMapShortest.route);
+  const tMapRouteExceptStairs = useSelector(state => state.routesReducer.tMapExceptStairs.route);
 
   const [isMark, setIsMark] = useState(originLocation && destinationLocation ? true : false);
 
-  return (
+  useEffect(() => {
+    if (!nameOfRenderingRoute) return;
 
+  }, [nameOfRenderingRoute]);
+
+  return (
     isMark
       ? <>
         <Marker
@@ -47,36 +55,43 @@ const Route = ({
             name='flag-checkered'
             style={styles.destinationIcon} />
         </Marker>
-        <Polyline
-          coordinates={mapBoxRoute}
-          strokeColor={'red'}
-          strokeWidth={5}
-        />
-        <Polyline
-          coordinates={mapQuestRoute}
-          strokeColor={'orange'}
-          strokeWidth={5}
-        />
-        <Polyline
-          coordinates={tMapRouteDefault}
-          strokeColor={'yellow'}
-          strokeWidth={6}
-        />
-        <Polyline
-          coordinates={tMapRouteBigRoad}
-          strokeColor={'green'}
-          strokeWidth={5}
-        />
-        <Polyline
-          coordinates={tMapRouteShortest}
-          strokeColor={'navy'}
-          strokeWidth={5}
-        />
-        <Polyline
-          coordinates={tMapRouteExceptStairs}
-          strokeColor={'purple'}
-          strokeWidth={5}
-        />
+        {
+          mode === MAP_MODE.SEARCH
+            ? <>
+              <Polyline
+                coordinates={mapBoxRoute}
+                strokeColor={'red'}
+                strokeWidth={8}
+              />
+              <Polyline
+                coordinates={mapQuestRoute}
+                strokeColor={'orange'}
+                strokeWidth={6}
+                zIndex={10}
+              />
+              <Polyline
+                coordinates={tMapRouteDefault}
+                strokeColor={'yellow'}
+                strokeWidth={10}
+              />
+              <Polyline
+                coordinates={tMapRouteBigRoad}
+                strokeColor={'green'}
+                strokeWidth={8}
+              />
+              <Polyline
+                coordinates={tMapRouteShortest}
+                strokeColor={'navy'}
+                strokeWidth={4}
+              />
+              <Polyline
+                coordinates={tMapRouteExceptStairs}
+                strokeColor={'purple'}
+                strokeWidth={2}
+              />
+            </>
+            : <OptimalRoute mode={mode} />
+        }
       </>
       : null
   );

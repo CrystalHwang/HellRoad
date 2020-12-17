@@ -11,11 +11,24 @@ import { COLOR } from '../constants';
 
 const { width, height } = Dimensions.get('window');
 const HomeStack = createStackNavigator();
+HomeStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
 
 const HomeStackNavigator = ({ navigation }) => {
 
   return (
     <HomeStack.Navigator
+      navigationOptions={{
+        tabBarVisible: false
+      }}
       screenOptions={{
         headerStyle: {
           backgroundColor: COLOR.DARK_GREY,
@@ -23,6 +36,7 @@ const HomeStackNavigator = ({ navigation }) => {
         },
         headerTintColor: COLOR.WHITE,
         headerLeft: () => <MenuIcon navigation={navigation} />,
+
       }}>
       <HomeStack.Screen
         name="Home"
@@ -38,6 +52,7 @@ const HomeStackNavigator = ({ navigation }) => {
         options={{
           //headerTintColor: 'white',
           //headerStyle: { backgroundColor: COLOR.MAIN_GREY }
+
         }}
       />
       <HomeStack.Screen

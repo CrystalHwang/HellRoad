@@ -1,17 +1,16 @@
-export const transformCoordinatesArray = (arrayOfLatLng) => {
-  const transformedArray = arrayOfLatLng.map((element) => {
-    return { 'latitude': element[1], 'longitude': element[0] };
-  });
-
-  return transformedArray;
-};
-
 export const getLatLngFromAPIData = (response) => {
   const locationData = response.data.results[0].geometry.location;
 
   return { 'latitude': locationData.lat, 'longitude': locationData.lng };
 };
 
+export const transformCoordinatesArrayForMapBox = (arrayOfLatLng) => {
+  const transformedArray = arrayOfLatLng.map((element) => {
+    return { 'latitude': element[1], 'longitude': element[0] };
+  });
+
+  return transformedArray;
+};
 
 export const transformCoordinatesArrayForMapQuest = (arrayOfLatLng) => {
   const transformedArray = [];
@@ -55,4 +54,61 @@ export const transformCoordinatesArrayForTMap = (arrayOfPathObject) => {
   });
 
   return coordinatesArray;
+};
+
+export const convertedToRoundedMinutes = (duration) => {
+  if (typeof duration === "number") {
+    const roundedMinutes = Math.floor((duration + 0.5) / 60);
+
+    return roundedMinutes;
+  }
+
+  const hours = Number(duration.slice(0, 2));
+  const minutes = Number(duration.slice(3, 5));
+  const seconds = Number(duration.slice(6, 8));
+
+  let convertedMinutes = 0;
+
+  if (hours) {
+    convertedMinutes += hours * 60;
+  }
+
+  if (minutes) {
+    convertedMinutes += minutes;
+  }
+
+  if (seconds) {
+    convertedMinutes += Math.floor((seconds + 30) / 60);
+  }
+
+  return convertedMinutes;
+};
+
+export const findBoundingBoxCoordinates = (arrayOfCoords) => {
+  const boundingBox = {
+    up: arrayOfCoords[0].latitude, // 위도 중에 가장 값이 큰 것
+    down: arrayOfCoords[0].latitude, // 위도 중에 가장 값이 작은 것
+    left: arrayOfCoords[0].longitude, // 경도 중에 가장  값이 작은 것
+    right: arrayOfCoords[0].longitude, // 경도 중에 가장 값이 큰 것
+  };
+
+  arrayOfCoords.forEach((coords, index) => {
+    if (coords.latitude > boundingBox.up) {
+      boundingBox.up = coords.latitude;
+    }
+
+    if (coords.latitude < boundingBox.down) {
+      boundingBox.down = coords.latitude;
+    }
+
+    if (coords.longitude < boundingBox.left) {
+      boundingBox.left = coords.longitude;
+    }
+
+    if (coords.longitude > boundingBox.right) {
+      boundingBox.right = coords.longitude;
+    }
+  });
+
+  return boundingBox;
 };

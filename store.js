@@ -7,7 +7,7 @@ import rootReducer from './reducers/rootReducer';
 const middleware = [];
 
 if (process.env.NODE_ENV !== 'production') {
-  //middleware.push(createLogger());
+  middleware.push(createLogger());
 }
 
 export default createStore(rootReducer, composeWithDevTools(applyMiddleware(...middleware)));
