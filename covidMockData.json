@@ -1,4 +1,32 @@
  [
+  {
+    "solo": true,
+    "profile": "-",
+    "tag": "#서울 확진자",
+    "month": 12,
+    "day": 16,
+    "name": "서울",
+    "full": "서울 확진자",
+    "address": "",
+    "address_name": "서울 강서구 마곡중앙로 161-22",
+    "address_english":
+      "",
+    "latlng": "37.56876977653761, 126.82594657062178"
+  },
+  {
+    "solo": true,
+    "profile": "-",
+    "tag": "#서울 확진자",
+    "month": 12,
+    "day": 16,
+    "name": "서울",
+    "full": "서울 확진자",
+    "address": "",
+    "address_name": "서울 강서구 마곡중앙5로 2",
+    "address_english":
+      "",
+    "latlng": "37.56684840726306, 126.8274832325863"
+  },
  {
     "solo": true,
     "profile": "-",

@@ -11,6 +11,8 @@ import {
   LOADING_COVID_STATUS,
   LOADING_CURRENT_LOCATION,
   LOADING_ROUTES,
+  NAVIGATION_DATA,
+  DANGER_LOCATION
 
 } from '../constants/actionTypes';
 
@@ -36,46 +38,45 @@ export const updateDestinationLocation = (location) => {
   };
 };
 
-/* route는 arr*/
-export const updateMapBoxRoute = (route) => {
+export const updateMapBoxRoute = (routeData) => {
   return {
     type: MAP_BOX_ROUTE,
-    payload: route
+    payload: routeData
   };
 };
 
-export const updateMapQuestRoute = (route) => {
+export const updateMapQuestRoute = (routeData) => {
   return {
     type: MAP_QUEST_ROUTE,
-    payload: route
+    payload: routeData
   };
 };
 
-export const updateTMapRouteDefault = (route) => {
+export const updateTMapRouteDefault = (routeData) => {
   return {
     type: T_MAP_ROUTE_DEFAULT,
-    payload: route
+    payload: routeData
   };
 };
 
-export const updateTMapRouteBigRoad = (route) => {
+export const updateTMapRouteBigRoad = (routeData) => {
   return {
     type: T_MAP_ROUTE_BIG_ROAD,
-    payload: route
+    payload: routeData
   };
 };
 
-export const updateTMapRouteShortest = (route) => {
+export const updateTMapRouteShortest = (routeData) => {
   return {
     type: T_MAP_ROUTE_SHORTEST,
-    payload: route
+    payload: routeData
   };
 };
 
-export const updateTMapRouteExceptStairs = (route) => {
+export const updateTMapRouteExceptStairs = (routeData) => {
   return {
     type: T_MAP_ROUTE_EXCEPT_STAIRS,
-    payload: route
+    payload: routeData
   };
 };
 
@@ -97,5 +98,19 @@ export const updateIsLoadingRoutes = (isLoading) => {
   return {
     type: LOADING_ROUTES,
     payload: isLoading
+  };
+};
+
+export const updateDangerLocations = (dangerLocations) => {
+  return {
+    type: DANGER_LOCATION,
+    payload: dangerLocations
+  };
+};
+
+export const updateNavigationDatas = (navigationDatas) => {
+  return {
+    type: NAVIGATION_DATA,
+    payload: navigationDatas
   };
 };

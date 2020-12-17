@@ -60,7 +60,9 @@ const AppContainer = () => {
       const traceLocation = await Location.startLocationUpdatesAsync(BACKGROUND_LOCATION_TASK, {
         accuracy: Location.Accuracy.Highest,
         timeInterval: 5000,
-        distanceInterval: 0.001,
+        distanceInterval: 0.05,
+        deferredUpdatesInterval: 5000,
+        deferredUpdatesDistance: 1,
         howsBackgroundLocationIndicator: true,
         foregroundService: {
           notificationTitle: 'Hell路 에서',

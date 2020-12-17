@@ -7,13 +7,27 @@ import {
   T_MAP_ROUTE_EXCEPT_STAIRS
 } from '../constants/actionTypes';
 
+const initialConfig = {
+  valid: false,
+  distance: '',
+  duration: '',
+  countOfDanger: '',
+  route: [],
+  boundingBox: {
+    up: '',
+    down: '',
+    left: '',
+    right: ''
+  }
+};
+
 const initialState = {
-  mapBoxRoute: [],
-  mapQuestRoute: [],
-  tMapRouteDefault: [],
-  tMapRouteBigRoad: [],
-  tMapRouteShortest: [],
-  tMapRouteExceptStairs: []
+  mapBox: { ...initialConfig },
+  mapQuest: { ...initialConfig },
+  tMapDefault: { ...initialConfig },
+  tMapBigRoad: { ...initialConfig },
+  tMapShortest: { ...initialConfig },
+  tMapExceptStairs: { ...initialConfig }
 };
 
 const routesReducer = (state = initialState, action) => {
@@ -21,37 +35,79 @@ const routesReducer = (state = initialState, action) => {
     case MAP_BOX_ROUTE:
       return {
         ...state,
-        mapBoxRoute: [...action.payload]
+        mapBox: {
+          valid: action.payload.valid,
+          distance: action.payload.distance,
+          duration: action.payload.duration,
+          countOfDanger: action.payload.countOfDanger,
+          route: [...action.payload.route],
+          boundingBox: { ...state.mapBox.boundingBox, ...action.payload.boundingBox }
+        }
       };
 
     case MAP_QUEST_ROUTE:
       return {
         ...state,
-        mapQuestRoute: [...action.payload]
+        mapQuest: {
+          valid: action.payload.valid,
+          distance: action.payload.distance,
+          duration: action.payload.duration,
+          countOfDanger: action.payload.countOfDanger,
+          route: [...action.payload.route],
+          boundingBox: { ...state.mapQuest.boundingBox, ...action.payload.boundingBox }
+        }
       };
 
     case T_MAP_ROUTE_DEFAULT:
       return {
         ...state,
-        tMapRouteDefault: [...action.payload]
+        tMapDefault: {
+          valid: action.payload.valid,
+          distance: action.payload.distance,
+          duration: action.payload.duration,
+          countOfDanger: action.payload.countOfDanger,
+          route: [...action.payload.route],
+          boundingBox: { ...state.tMapDefault.boundingBox, ...action.payload.boundingBox }
+        }
       };
 
     case T_MAP_ROUTE_BIG_ROAD:
       return {
         ...state,
-        tMapRouteBigRoad: [...action.payload]
+        tMapBigRoad: {
+          valid: action.payload.valid,
+          distance: action.payload.distance,
+          duration: action.payload.duration,
+          countOfDanger: action.payload.countOfDanger,
+          route: [...action.payload.route],
+          boundingBox: { ...state.tMapBigRoad.boundingBox, ...action.payload.boundingBox }
+        }
       };
 
     case T_MAP_ROUTE_SHORTEST:
       return {
         ...state,
-        tMapRouteShortest: [...action.payload]
+        tMapShortest: {
+          valid: action.payload.valid,
+          distance: action.payload.distance,
+          duration: action.payload.duration,
+          countOfDanger: action.payload.countOfDanger,
+          route: [...action.payload.route],
+          boundingBox: { ...state.tMapShortest.boundingBox, ...action.payload.boundingBox }
+        }
       };
 
     case T_MAP_ROUTE_EXCEPT_STAIRS:
       return {
         ...state,
-        tMapRouteExceptStairs: [...action.payload]
+        tMapExceptStairs: {
+          valid: action.payload.valid,
+          distance: action.payload.distance,
+          duration: action.payload.duration,
+          countOfDanger: action.payload.countOfDanger,
+          route: [...action.payload.route],
+          boundingBox: { ...state.tMapExceptStairs.boundingBox, ...action.payload.boundingBox }
+        }
       };
 
     default:

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { StyleSheet, View, Text, Dimensions, Alert, Button, TextInput, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, Alert, Button, TextInput, Keyboard, TouchableWithoutFeedback, TouchableOpacity, Vibration, Modal } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { Overlay } from 'react-native-elements';
+
+import { Audio } from 'expo-av';
 
 import { COLOR, MAP_MODE, MESSAGE } from '../constants';
 import { getLatLngFromAddress, getRoutesFromAPIs } from '../api';
@@ -16,6 +19,10 @@ const SearchScreen = ({ navigation }) => {
   const currentLocation = useSelector(state => state.locationReducer.current);
   const originLocation = useSelector(state => state.locationReducer.origin);
   const destinationLocation = useSelector(state => state.locationReducer.destination);
+  const isLoadingRoutes = useSelector(state => state.loadingReducer.routes);
+
+  const navigationDistance = useSelector(state => state.navigationReducer.distance);
+  const navigationDuration = useSelector(state => state.navigationReducer.duration);
   const dispatch = useDispatch();
 
   const [originState, setOriginState] = useState({ ...originLocation });
@@ -31,6 +38,39 @@ const SearchScreen = ({ navigation }) => {
 
   const [mapMode, setMapMode] = useState(MAP_MODE.SEARCH);
 
+  const [sound, setSound] = useState();
+
+
+  const playSound = async () => {
+    console.log('Loading Sound');
+    const { sound } = await Audio.Sound.createAsync(
+      require('../assets/Criminal.mp3')
+    );
+    setSound(sound);
+
+    console.log('Playing Sound');
+    await sound.playAsync();
+  };
+
+
+
+
+
+
+  useEffect(() => {
+    return sound
+      ? () => {
+        console.log('Unloading Sound');
+        sound.unloadAsync();
+      }
+      : undefined;
+  }, [sound]);
+
+
+
+
+
+
 
   useEffect(() => {
     if ((originState.latitude !== originLocation.latitude) || (originState.longitude !== originLocation.longitude)) return;
@@ -42,21 +82,34 @@ const SearchScreen = ({ navigation }) => {
     (async () => {
       console.log('따뜻한겨울');
       const routes = await getRoutesFromAPIs(originLocation, destinationLocation, originName, destinationName);
+      //console.log("ROUTES", routes);
 
-      dispatch(actions.updateMapBoxRoute(routes.mapBoxRoute));
-      dispatch(actions.updateMapQuestRoute(routes.mapQuestRoute));
-      dispatch(actions.updateTMapRouteDefault(routes.tMapRouteDefault));
-      dispatch(actions.updateTMapRouteBigRoad(routes.tMapRouteBigRoad));
-      dispatch(actions.updateTMapRouteShortest(routes.tMapRouteShortest));
-      dispatch(actions.updateTMapRouteExceptStairs(routes.tMapRouteExceptStairs));
+      dispatch(actions.updateMapBoxRoute(routes.mapBox));
+      dispatch(actions.updateMapQuestRoute(routes.mapQuest));
+      dispatch(actions.updateTMapRouteDefault(routes.tMapDefault));
+      dispatch(actions.updateTMapRouteBigRoad(routes.tMapBigRoad));
+      dispatch(actions.updateTMapRouteShortest(routes.tMapShortest));
+      dispatch(actions.updateTMapRouteExceptStairs(routes.tMapExceptStairs));
 
       dispatch(actions.updateIsLoadingRoutes(false));
     })();
+  }, [originState, destinationState]);
+
+
+
+
+
+  useEffect(() => {
+    if (!isClickedSearchButton || isLoadingRoutes) return;
 
     setIsClickedSearchButton(false);
     setIsDoneGettingRouteData(true);
     setIsShowLoadingSpinner(false);
-  }, [originState, destinationState]);
+  }, [isLoadingRoutes]);
+
+
+
+
 
   useEffect(() => {
     if (!isClickedSearchButton) return;
@@ -74,8 +127,12 @@ const SearchScreen = ({ navigation }) => {
       setOriginState(originLatLng);
       setDestinationState(destinationLatLng);
     })();
-
   }, [isClickedSearchButton]);
+
+
+
+
+
 
   const handleClickSearchButton = async () => {
     if (!originName) {
@@ -85,10 +142,17 @@ const SearchScreen = ({ navigation }) => {
     if (!destinationName) {
       return Alert.alert(MESSAGE.DESTINATION_SKIPPED);
     }
+    //playSound();
+    Vibration.vibrate([1000]);
 
     Keyboard.dismiss();
     setIsClickedSearchButton(true);
   };
+
+
+
+
+
 
   const handleClickStartButton = () => {
     //valid check -> 내 위치와 출발지가 너무 멀 경우 거부 알람! 해주기 
@@ -98,6 +162,16 @@ const SearchScreen = ({ navigation }) => {
     //navigation.navigate('Walking');
   };
 
+  const handleClickNavigationCancelButton = () => {
+    navigation.goBack();
+  };
+
+
+
+
+
+
+
   return (
     isLoading
       ?
@@ -105,49 +179,59 @@ const SearchScreen = ({ navigation }) => {
         style={styles.screenContainerForKeyboardDismiss}
         onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          {
-            mapMode === MAP_MODE.SEARCH
-              ?
-              <View style={styles.searchBarWrapper}>
-                <View style={styles.searchInputWrapper}>
-                  <TextInput
-                    style={styles.searchInput}
-                    placeholder="출발지"
-                    onChangeText={text => setOriginName(text)}
-                    defaultValue={originName}
-                    paddingLeft={10} />
-                  <TextInput
-                    style={styles.searchInput}
-                    placeholder="도착지"
-                    onChangeText={text => setDestinationName(text)}
-                    defaultValue={destinationName}
-                    paddingLeft={10}
-                  />
-                  {/* <SearchBar /> */}
-                </View>
-                <View style={styles.searchButton}>
-                  <Button
-                    title="길찾기"
-                    onPress={handleClickSearchButton} />
-                </View>
+          {mapMode === MAP_MODE.SEARCH
+            ?
+            <View style={styles.searchBarWrapper}>
+              <View style={styles.searchInputWrapper}>
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder="출발지"
+                  onChangeText={text => setOriginName(text)}
+                  defaultValue={originName}
+                  paddingLeft={10} />
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder="도착지"
+                  onChangeText={text => setDestinationName(text)}
+                  defaultValue={destinationName}
+                  paddingLeft={10}
+                />
+                {/* <SearchBar /> */}
               </View>
-              : null
+              <View style={styles.searchButton}>
+                <Button
+                  title="길찾기"
+                  onPress={handleClickSearchButton} />
+              </View>
+            </View>
+            : <View style={styles.navigationStautsBar}>
+              <Button
+                title='안내 취소'
+                onPress={handleClickNavigationCancelButton}></Button>
+              <View style={styles.navigationStatus}>
+                <Text>예상 소요 시간 약 {navigationDuration}분</Text>
+                <Text>예상 거리 {navigationDistance / 1000} m</Text>
+              </View>
+            </View>
           }
-          <Spinner
-            visible={isShowLoadingSpinner}
-            textContent={'길을 찾고 있어요'}
-            textStyle={styles.spinner}
-            animation='fade'
-            color='blue'
-            size='large'
-          />
-          <Map
-            searchMode={true}
-            originName={originName}
-            destinationName={destinationName}
-            isClickedSearchButton={isClickedSearchButton}
-            setIsClickedSearchButton={setIsClickedSearchButton}
-            isDoneGettingRouteData={isDoneGettingRouteData} />
+          <View
+            style={styles.mapContainer}
+            height={mapMode === MAP_MODE.WALKING ? '100%' : '85%'}>
+            <Spinner
+              visible={isShowLoadingSpinner}
+              textContent={'길을 찾고 있어요'}
+              textStyle={styles.spinner}
+              animation='fade'
+              color='white'
+              size='large'
+            //overlayColor='grey'
+            />
+            <Map
+              mode={mapMode}
+              originName={originName}
+              destinationName={destinationName}
+              isShowLoadingSpinner={isShowLoadingSpinner} />
+          </View>
           {
             isDoneGettingRouteData && mapMode === MAP_MODE.SEARCH
               ?
@@ -159,7 +243,7 @@ const SearchScreen = ({ navigation }) => {
               : null
           }
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback >
       :
       <View>
         <Spinner
@@ -184,12 +268,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLOR.MAIN,
-    width: width,
-    height: height,
+    width: '100%',
+    height: '100%',
   },
   searchBarWrapper: {
-    width: width,
-    height: height * 0.15,
+    width: '100%',
+    height: '15%',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
@@ -204,6 +288,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     color: 'white',
   },
+  mapContainer: {
+    width: '100%',
+  },
   searchInput: {
     width: '100%',
     height: '40%',
@@ -216,13 +303,10 @@ const styles = StyleSheet.create({
     height: '80%',
     justifyContent: 'flex-end',
   },
-  map: {
-    width: '100%',
-    height: '100%',
-  },
   spinner: {
-    color: COLOR.LIGHT_BLUE,
-    backgroundColor: COLOR.DARK_GREY,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
   },
   startButtonContainer: {
     width: width * 0.8,
@@ -241,6 +325,23 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 25
   },
+  navigationStautsBar: {
+    width: '100%',
+    height: '5%',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255, 0.1)'
+  },
+  navigationCancelButton: {
+    width: '50%'
+  },
+  navigationStatus: {
+    width: '70%',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  }
 });
 
 export default SearchScreen;

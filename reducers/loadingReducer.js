@@ -29,7 +29,6 @@ const loadingReducer = (state = initialState, action) => {
         ...state,
         routes: action.payload
       };
-
     default:
       return state;
   }
