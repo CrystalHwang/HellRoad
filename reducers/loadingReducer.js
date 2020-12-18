@@ -5,7 +5,7 @@ import {
 } from '../constants/actionTypes';
 
 const initialState = {
-  covidStatus: false,
+  covidStatus: true,
   currentLocation: false,
   routes: false
 };

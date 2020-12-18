@@ -12,11 +12,13 @@ import {
   LOADING_CURRENT_LOCATION,
   LOADING_ROUTES,
   NAVIGATION_DATA,
-  DANGER_LOCATION
-
+  DANGER_LOCATION,
+  CHANGE_MAP_MODE,
+  COVID_STAUS_DATA,
+  CHECK_START,
+  CHECK_FINISH,
 } from '../constants/actionTypes';
 
-/* location은 Obj -> {'latitude' : latitude, 'longitude': longitude} */
 export const updateCurrentLocation = (location) => {
   return {
     type: CURRENT_LOCATION,
@@ -101,7 +103,7 @@ export const updateIsLoadingRoutes = (isLoading) => {
   };
 };
 
-export const updateDangerLocations = (dangerLocations) => {
+export const updateNearestDangerLocation = (dangerLocations) => {
   return {
     type: DANGER_LOCATION,
     payload: dangerLocations
@@ -112,5 +114,33 @@ export const updateNavigationDatas = (navigationDatas) => {
   return {
     type: NAVIGATION_DATA,
     payload: navigationDatas
+  };
+};
+
+export const updateMapMode = (mode) => {
+  return {
+    type: CHANGE_MAP_MODE,
+    payload: mode
+  };
+};
+
+export const updateCovidStatusData = (arrayOfStatusData) => {
+  return {
+    type: COVID_STAUS_DATA,
+    payload: arrayOfStatusData
+  };
+};
+
+export const updateStartState = (data) => {
+  return {
+    type: CHECK_START,
+    payload: data
+  };
+};
+
+export const updateFinishState = (data) => {
+  return {
+    type: CHECK_FINISH,
+    payload: data
   };
 };

@@ -79,7 +79,7 @@ export const getRoutesFromAPIs = async (originLocation, destinationLocation, ori
     //console.log('?!!!!!!!!!', routeFromMapQuest);
     routes.mapQuest = {
       valid: true,
-      distance: dataOfRoute.distance,
+      distance: dataOfRoute.distance * 1000,
       duration: convertedToRoundedMinutes(dataOfRoute.formattedTime),
       countOfDanger: 0,
       route: [...routeFromMapQuest],
@@ -186,7 +186,7 @@ export const getRoutesFromAPIs = async (originLocation, destinationLocation, ori
       boundingBox: {}
     };
 
-    console.error('T map stairs', err);
+    //console.error('T map stairs', err);
   }
 
   try {
@@ -217,7 +217,7 @@ export const getRoutesFromAPIs = async (originLocation, destinationLocation, ori
       boundingBox: {}
     };
 
-    console.error('T map shortest', err);
+    //console.error('T map shortest', err);
   }
 
   return routes;

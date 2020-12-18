@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { StyleSheet, View, Text, Dimensions, Alert, Button, TextInput, Keyboard, TouchableWithoutFeedback, TouchableOpacity, Vibration, Modal } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, Alert, Button, TextInput, Keyboard, TouchableWithoutFeedback, TouchableOpacity, Vibration } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { Overlay } from 'react-native-elements';
 
-import { Audio } from 'expo-av';
 
-import { COLOR, MAP_MODE, MESSAGE } from '../constants';
+import { COLOR, MAP_MODE, MESSAGE, DEFAULT_LOCATION, DELTA } from '../constants';
 import { getLatLngFromAddress, getRoutesFromAPIs } from '../api';
 
 import SearchBar from '../components/SearchBar';
@@ -16,13 +14,17 @@ import * as actions from '../actions';
 const { width, height } = Dimensions.get('window');
 
 const SearchScreen = ({ navigation }) => {
-  const currentLocation = useSelector(state => state.locationReducer.current);
+  //const currentLocation = useSelector(state => state.locationReducer.current);
   const originLocation = useSelector(state => state.locationReducer.origin);
   const destinationLocation = useSelector(state => state.locationReducer.destination);
   const isLoadingRoutes = useSelector(state => state.loadingReducer.routes);
 
   const navigationDistance = useSelector(state => state.navigationReducer.distance);
   const navigationDuration = useSelector(state => state.navigationReducer.duration);
+  const mapModeInStore = useSelector(state => state.mapModeReducer);
+
+  const isStartNavigate = useSelector(state => state.startReducer.navigate);
+  const isFinishNavigate = useSelector(state => state.finishReducer.navigate);
   const dispatch = useDispatch();
 
   const [originState, setOriginState] = useState({ ...originLocation });
@@ -32,45 +34,13 @@ const SearchScreen = ({ navigation }) => {
   const [isShowLoadingSpinner, setIsShowLoadingSpinner] = useState(false);
   const [isDoneGettingRouteData, setIsDoneGettingRouteData] = useState(false);
   const [isClickedSearchButton, setIsClickedSearchButton] = useState(false);
+  const [isDoneToNavigate, setIsDoneToNavigate] = useState(false);
+  const [isDoneSaveDangerData, setIsDoneSaveDangerData] = useState(false);
 
   const [originName, setOriginName] = useState('');
   const [destinationName, setDestinationName] = useState('');
 
   const [mapMode, setMapMode] = useState(MAP_MODE.SEARCH);
-
-  const [sound, setSound] = useState();
-
-
-  const playSound = async () => {
-    console.log('Loading Sound');
-    const { sound } = await Audio.Sound.createAsync(
-      require('../assets/Criminal.mp3')
-    );
-    setSound(sound);
-
-    console.log('Playing Sound');
-    await sound.playAsync();
-  };
-
-
-
-
-
-
-  useEffect(() => {
-    return sound
-      ? () => {
-        console.log('Unloading Sound');
-        sound.unloadAsync();
-      }
-      : undefined;
-  }, [sound]);
-
-
-
-
-
-
 
   useEffect(() => {
     if ((originState.latitude !== originLocation.latitude) || (originState.longitude !== originLocation.longitude)) return;
@@ -96,9 +66,6 @@ const SearchScreen = ({ navigation }) => {
   }, [originState, destinationState]);
 
 
-
-
-
   useEffect(() => {
     if (!isClickedSearchButton || isLoadingRoutes) return;
 
@@ -106,9 +73,6 @@ const SearchScreen = ({ navigation }) => {
     setIsDoneGettingRouteData(true);
     setIsShowLoadingSpinner(false);
   }, [isLoadingRoutes]);
-
-
-
 
 
   useEffect(() => {
@@ -129,11 +93,6 @@ const SearchScreen = ({ navigation }) => {
     })();
   }, [isClickedSearchButton]);
 
-
-
-
-
-
   const handleClickSearchButton = async () => {
     if (!originName) {
       return Alert.alert(MESSAGE.DEPARTURE_SKIPPED);
@@ -142,35 +101,32 @@ const SearchScreen = ({ navigation }) => {
     if (!destinationName) {
       return Alert.alert(MESSAGE.DESTINATION_SKIPPED);
     }
-    //playSound();
-    Vibration.vibrate([1000]);
 
     Keyboard.dismiss();
+    dispatch(actions.updateStartState({ navigate: true }));
     setIsClickedSearchButton(true);
   };
-
-
-
-
-
 
   const handleClickStartButton = () => {
     //valid check -> 내 위치와 출발지가 너무 멀 경우 거부 알람! 해주기 
     // 
     setMapMode(MAP_MODE.WALKING);
+    dispatch(actions.updateMapMode(MAP_MODE.WALKING));
 
-    //navigation.navigate('Walking');
   };
 
   const handleClickNavigationCancelButton = () => {
-    navigation.goBack();
+    setIsDoneGettingRouteData(false);
+    setIsDoneToNavigate(true);
+
+    dispatch(actions.updateFinishState({ navigate: true }));
+
+    dispatch(actions.updateMapMode(MAP_MODE.SEARCH));
   };
 
-
-
-
-
-
+  useEffect(() => {
+    setMapMode(MAP_MODE.SEARCH);
+  }, [mapModeInStore]);
 
   return (
     isLoading
@@ -179,7 +135,7 @@ const SearchScreen = ({ navigation }) => {
         style={styles.screenContainerForKeyboardDismiss}
         onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          {mapMode === MAP_MODE.SEARCH
+          {mapModeInStore === MAP_MODE.SEARCH
             ?
             <View style={styles.searchBarWrapper}>
               <View style={styles.searchInputWrapper}>
@@ -205,12 +161,13 @@ const SearchScreen = ({ navigation }) => {
               </View>
             </View>
             : <View style={styles.navigationStautsBar}>
+              {console.log("시간!!", navigationDistance, navigationDuration)}
               <Button
                 title='안내 취소'
                 onPress={handleClickNavigationCancelButton}></Button>
               <View style={styles.navigationStatus}>
                 <Text>예상 소요 시간 약 {navigationDuration}분</Text>
-                <Text>예상 거리 {navigationDistance / 1000} m</Text>
+                <Text>예상 거리 {navigationDistance / 1000} km</Text>
               </View>
             </View>
           }
@@ -230,10 +187,13 @@ const SearchScreen = ({ navigation }) => {
               mode={mapMode}
               originName={originName}
               destinationName={destinationName}
-              isShowLoadingSpinner={isShowLoadingSpinner} />
+              isShowLoadingSpinner={isShowLoadingSpinner}
+              isDoneGettingRouteData={isDoneGettingRouteData}
+              isDoneToNavigate={isDoneToNavigate}
+              setIsDoneSaveDangerData={setIsDoneSaveDangerData} />
           </View>
           {
-            isDoneGettingRouteData && mapMode === MAP_MODE.SEARCH
+            isDoneGettingRouteData && mapModeInStore === MAP_MODE.SEARCH
               ?
               <TouchableOpacity
                 style={styles.startButtonContainer}
@@ -327,7 +287,7 @@ const styles = StyleSheet.create({
   },
   navigationStautsBar: {
     width: '100%',
-    height: '5%',
+    height: '15%',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
