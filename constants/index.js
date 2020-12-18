@@ -14,16 +14,17 @@ export const COLOR = {
 };
 
 export const DEFAULT_LOCATION = {
-  /* 바닐라코딩 위도 및 경도 */
-  latitude: 37.50607,
-  longitude: 127.05921
+  latitude: 37.5695686,
+  longitude: 126.8263382
 };
 
 export const DELTA = {
   LATITUDE_FOR_SMALL: 0.02,
   LONGITUDE_FOR_SMALL: 0.02,
   LATITUDE_FOR_BIG: 0.005,
-  LONGITUDE_FOR_BIG: 0.005
+  LONGITUDE_FOR_BIG: 0.005,
+  LATITUDE_FOR_VERY_BIG: 0.003,
+  LONGITUDE_FOR_VERY_BIG: 0.003,
 };
 
 export const MAP_MODE = {
@@ -38,7 +39,9 @@ export const BACKGROUND_LOCATION_TASK = 'background-location-task';
 export const MESSAGE = {
   PERMISSION_DENIED: '위치 정보가 필요해요! 🌎',
   DEPARTURE_SKIPPED: '출발지를 입력하세요!',
-  DESTINATION_SKIPPED: '도착지를 입력하세요!'
+  DESTINATION_SKIPPED: '도착지를 입력하세요!',
+  ARRIVE_IN_DANGER_LOCATION: '다 왔어요! 힘내세요 🏃🏻‍♀️ 조심, 조심, 목적지 주변이 위험해요 😷',
+  ARRIVE_IN_SAFE_LOCATION: '다 왔어요! 힘내세요 🏃🏻‍♀️ 목적지 주변이 안전합니다 😄',
 };
 
 export const APIs = {

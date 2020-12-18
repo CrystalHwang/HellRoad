@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { StyleSheet, View, Dimensions, } from 'react-native';
-import MapView, { Marker, Circle, Polyline } from 'react-native-maps';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Polyline } from 'react-native-maps';
 
-import { COLOR, APIs, MAP_MODE } from '../constants';
-import * as actions from '../actions';
+import { APIs } from '../constants';
 
-const OptimalRoute = (mode) => {
+const OptimalRoute = () => {
   const mapBox = useSelector(state => state.routesReducer.mapBox);
   const mapQuest = useSelector(state => state.routesReducer.mapQuest);
   const tMapDefault = useSelector(state => state.routesReducer.tMapDefault);
@@ -14,14 +12,10 @@ const OptimalRoute = (mode) => {
   const tMapShortest = useSelector(state => state.routesReducer.tMapShortest);
   const tMapExceptStairs = useSelector(state => state.routesReducer.tMapExceptStairs);
 
-  const dispatch = useDispatch();
-
-  switch (mode) {
+  const optimalRoute = useSelector(state => state.navigationReducer.nameOfAPI);
+  console.log("OPTIMAL ROUTE", optimalRoute);
+  switch (optimalRoute) {
     case APIs.MAP_BOX:
-      dispatch(actions.updateNavigationDatas({
-        distance: mapBox.distance,
-        duration: mapBox.duration,
-      }));
       return (
         <Polyline
           coordinates={mapBox.route}
@@ -30,10 +24,6 @@ const OptimalRoute = (mode) => {
         />);
 
     case APIs.MAP_QUEST:
-      dispatch(actions.updateNavigationDatas({
-        distance: mapQuest.distance,
-        duration: mapQuest.duration,
-      }));
       return (
         <Polyline
           coordinates={mapQuest.route}
@@ -44,10 +34,6 @@ const OptimalRoute = (mode) => {
 
     default:
     case APIs.tMapRouteDefault:
-      dispatch(actions.updateNavigationDatas({
-        distance: tMapDefault.distance,
-        duration: tMapDefault.duration,
-      }));
       return (
         <Polyline
           coordinates={tMapDefault.route}
@@ -56,10 +42,6 @@ const OptimalRoute = (mode) => {
         />);
 
     case APIs.tMapRouteBigRoad:
-      dispatch(actions.updateNavigationDatas({
-        distance: tMapBigRoad.distance,
-        duration: tMapBigRoad.duration,
-      }));
       return (
         <Polyline
           coordinates={tMapBigRoad.route}
@@ -69,10 +51,6 @@ const OptimalRoute = (mode) => {
       );
 
     case APIs.tMapRouteShortest:
-      dispatch(actions.updateNavigationDatas({
-        distance: tMapShortest.distance,
-        duration: tMapShortest.duration,
-      }));
       return (
         <Polyline
           coordinates={tMapShortest.route}
@@ -81,10 +59,6 @@ const OptimalRoute = (mode) => {
         />);
 
     case APIs.tMapRouteExceptStairs:
-      dispatch(actions.updateNavigationDatas({
-        distance: tMapExceptStairs.distance,
-        duration: tMapExceptStairs.duration,
-      }));
       return (
         <Polyline
           coordinates={tMapExceptStairs.route}

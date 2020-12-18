@@ -1,3 +1,5 @@
+import { getDistance } from 'geolib';
+
 export const getLatLngFromAPIData = (response) => {
   const locationData = response.data.results[0].geometry.location;
 
@@ -111,4 +113,37 @@ export const findBoundingBoxCoordinates = (arrayOfCoords) => {
   });
 
   return boundingBox;
+};
+
+export const getTheNearestDangerousPoint = (currentLocation, markers) => {
+  let nearestLocation = {
+    latitude: '',
+    longitude: '',
+  };
+
+  let minDistance = Number.MAX_VALUE;
+
+  markers.forEach((marker, index) => {
+    console.log("가장 위험한 포인트 얻기위해서 계산 중입니다!!!!!!!!!!!! MARKER", marker.geometry.coordinates, "index", index);
+    const longitude = marker.geometry.coordinates[0];
+    const latitude = marker.geometry.coordinates[1];
+    const distance = getDistance(currentLocation, { latitude, longitude });
+
+
+    if (minDistance > distance) {
+      minDistance = distance;
+      nearestLocation.latitude = latitude;
+      nearestLocation.longitude = longitude;
+    }
+
+    minDistance = minDistance > distance ? distance : minDistance;
+  });
+
+  return { minDistance, nearestLocation };
+};
+
+export const getDistanceFromDestination = (currentLocation, destinationLocation) => {
+  const distance = getDistance(currentLocation, destinationLocation);
+
+  return distance;
 };
