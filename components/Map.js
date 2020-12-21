@@ -1,20 +1,16 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, View, Dimensions, TouchableHighlight } from 'react-native';
 import { Marker } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import Toast from 'react-native-toast-message';
-import { Button, Overlay } from 'react-native-elements';
-import Modal from 'modal-react-native-web';
 
 import CurrentLocationMarker from '../components/CurrentLocationMarker';
-import DangerCircle from '../components/DangerCircle';
 import Route from '../components/Route';
 import OptimalRoute from '../components/OptimalRoute';
 import AlertDanger from '../components/AlertDanger';
-import ToastMessage from '../components/ToastMessage';
 import ArriveModal from '../components/ArriveModal';
+import ChangeColor from '../components/ChangeColor';
 
 import * as actions from '../actions';
 import covidMockData from '../covidMockData.json';
@@ -32,18 +28,12 @@ const Map = ({
   isDoneGettingRouteData,
   isDoneToNavigate,
   setIsDoneSaveDangerData,
-
+  handleClickNavigationCancelButton,
 }) => {
   const mapModeInStore = useSelector(state => state.mapModeReducer);
   const isStartNavigate = useSelector(state => state.startReducer.navigate);
   const isFinishNavigate = useSelector(state => state.finishReducer.navigate);
   const nearestDangerDistance = useSelector(state => state.nearestDangerReducer.distance);
-
-  console.log("모드", mode);
-  console.log("스토어에 저장된 모드", mapModeInStore);
-  console.log("스타트 모드", isStartNavigate);
-  console.log("피니시 모드", isFinishNavigate);
-  console.log("===댄져어어엉====", nearestDangerDistance);
 
   const currentLocation = useSelector(state => state.locationReducer.current);
   const originLocation = useSelector(state => state.locationReducer.origin);
@@ -77,7 +67,7 @@ const Map = ({
 
   useEffect(() => {
     if (isShowLoadingSpinner || isLoadingRoutes) return;
-    console.log('이게 얼마나 실행되는거얌');
+
     moveToOriginLocation();
   }, [isLoadingRoutes, isShowLoadingSpinner]);
 
@@ -163,35 +153,26 @@ const Map = ({
   }, [isFinishNavigate]);
 
   const handleChangeRegionOnMap = useCallback((region, markers) => {
-    console.log("태민이", region, markers.length);
-    //console.log(markers);
     switch (mapModeInStore) {
       case MAP_MODE.HOME:
         return;
 
       case MAP_MODE.SEARCH:
-        alert('저장하려고하는 중인데..');
         if (isStartNavigate && !nearestDangerDistance) {
           setMarkersOnMap(markers);
-          console.log('markersOnMap에 저장');
+
           const dangerLocation = getTheNearestDangerousPoint(currentLocation, markers);
           const { minDistance, nearestLocation } = dangerLocation;
 
-          console.log("가장 가까운 위험한 곳!!!!!!!!!!!!!!", minDistance, nearestLocation);
-
-
           setIsStartedGuidingRoute(true);
-          //setNearestDangerDistance(minDistance);
+
           dispatch(actions.updateNearestDangerLocation(dangerLocation));
           moveToCurrentLocation();
-          alert('위험한 곳 저장');
-          //setIsDoneSaveDangerData(true);
         }
 
         return;
 
       case MAP_MODE.WALKING:
-        console.log("위험한 곳 저장 했는데!,", nearestDangerDistance);
         return;
 
     }
@@ -204,37 +185,21 @@ const Map = ({
     }
 
     if (mapModeInStore !== MAP_MODE.WALKING) return;
-    console.log("모드 확인!!!", isStartNavigate, isFinishNavigate);
 
-
-    //moveToCurrentLocation();
-
-    //if (isDoneToNavigate) return;
-    // if (!isStartedGuidingRoute) return;
-    //alert('nearestDanger!');
-
-    // setIsStartedGuidingRoute(true);
-
-    console.log("가까운 곳 판단해깅!", nearestDangerDistance);
-    // alert('위험한 곳 저장하고 들어옴...');
     if (!nearestDangerDistance) {
       moveToCurrentLocation();
       return;
     }
 
     const remainingDistance = getDistanceFromDestination(currentLocation, destinationLocation);
-    console.log("남은거리!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", remainingDistance, '위험한거리', nearestDangerDistance);
 
-    // if (isGetDistance) return;
     if (remainingDistance < 70) {
       setIsNotifyDanger(false);
       if (nearestDangerDistance < 100) {
         setIsShowArriveModal(true);
         setIsDangerInDestination(true);
-        //alert('다 왔어요! 힘내세요 🏃🏻‍♀️ 조심, 조심, 목적지 주변이 위험해요 😷');
       } else {
         setIsShowArriveModal(true);
-        // alert('다 왔어요! 힘내세요 🏃🏻‍♀️ 목적지 주변이 안전합니다 😄');
       }
       return;
     }
@@ -248,6 +213,7 @@ const Map = ({
 
   useEffect(() => {
     if (mapModeInStore !== MAP_MODE.SEARCH) return;
+
     if (!isDoneGettingRouteData) return;
 
     let countOfMapBox = 0;
@@ -430,20 +396,15 @@ const Map = ({
           latitudeDelta: DELTA.LATITUDE_FOR_SMALL,
           longitudeDelta: DELTA.LONGITUDE_FOR_SMALL
         }}
-        showsUserLocation={true}
-        showsBuildings={true}
-        clusterColor={COLOR.LIGHT_RED}
-        tracksViewChanges={true}
-        followsUserLocation={mapModeInStore === MAP_MODE.WALKING ? true : false}
-        zoomEnabled={mapModeInStore === MAP_MODE.SEARCH ? false : true}
         loadingEnabled={true}
+        showsBuildings={true}
+        showsUserLocation={true}
+        tracksViewChanges={true}
         moveOnMarkerPress={false}
-        //onMarkersChange={(markers) => console.log("Markers", markers)}
-        onRegionChange={(region) => {
-          console.log("----------------------------------지도 위치 바뀜----------------------------------", region);
-        }}
+        clusterColor={COLOR.LIGHT_RED}
         onRegionChangeComplete={handleChangeRegionOnMap}
-      >
+        zoomEnabled={mapModeInStore === MAP_MODE.SEARCH ? false : true}
+        followsUserLocation={mapModeInStore === MAP_MODE.WALKING ? true : false}>
         <CurrentLocationMarker />
         {
           covidMockData.map((data, index) => {
@@ -483,17 +444,19 @@ const Map = ({
             ? <OptimalRoute />
             : null
         }
-        {
-          mapModeInStore === MAP_MODE.WALKING && isNotifyDanger
-            ? <>
-              <AlertDanger />
-            </>
-            : null
-        }
       </MapView>
+      {
+        mapModeInStore === MAP_MODE.WALKING && isNotifyDanger
+          ? <View style={styles.changeColor}>
+            <ChangeColor />
+            <AlertDanger />
+          </View>
+          : null
+      }
       {
         mapModeInStore === MAP_MODE.WALKING && !isNotifyDanger && isShowArriveModal
           ? <ArriveModal
+            handleClickNavigationCancelButton={handleClickNavigationCancelButton}
             isDangerInDestination={isDangerInDestination}
             initialize={initialize} />
           : null
@@ -509,10 +472,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   currentLocationContainer: {
-    zIndex: 1,
     position: 'absolute',
     top: 0,
-    right: 0,
+    left: 0,
+    zIndex: 1,
     width: 50,
     height: 70,
     borderRadius: 50,
@@ -528,12 +491,28 @@ const styles = StyleSheet.create({
     width: 30,
     height: 40,
     color: COLOR.MAIN_BLUE,
-    fontSize: 25,
+    fontSize: 20,
     padding: 3,
+  },
+  originIcon: {
+    fontSize: 20,
+    zIndex: 10,
+  },
+  destinationIcon: {
+    fontSize: 20,
+    zIndex: 10,
   },
   map: {
     width: '100%',
     height: '100%',
+  },
+  changeColor: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1,
   }
 });
 

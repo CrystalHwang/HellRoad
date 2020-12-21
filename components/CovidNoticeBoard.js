@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import * as actions from '../actions';
 import getCovidStatusData from '../utils/scraper';
-import { COLOR } from '../constants';
+import { COLOR, BACKGROUND_COLOR } from '../constants';
 
 const { width, height } = Dimensions.get('window');
 
@@ -15,7 +15,6 @@ const CovidNoticeBoard = () => {
   const dispatch = useDispatch();
 
   const [viewSize, setViewSize] = useState({});
-  const [isDone, setIsDone] = useState(false);
 
   const move = useRef(new Animated.ValueXY({ x: 0, y: height * 0.15 })).current;
 
@@ -47,7 +46,6 @@ const CovidNoticeBoard = () => {
     if (isLoadingCovidStatus) return;
     if (!covidStatusData) return;
 
-
     moveY();
   }, [isLoadingCovidStatus, covidStatusData]);
 
@@ -64,7 +62,7 @@ const CovidNoticeBoard = () => {
               height: height * 0.1,
               transform: [{ translateX: move.x, }, { translateY: move.y }]
             }}>
-            <View style={styles.viewContainer}>
+            <View style={{ ...styles.viewContainer, backgroundColor: BACKGROUND_COLOR[index] }}>
               <Text style={styles.title}>{data.title}</Text>
               <Text style={styles.total}>{data.total}</Text>
               <View style={styles.variationContainer}>
@@ -89,6 +87,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 10,
     borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
+    elevation: 20,
   },
   viewContainer: {
     width: '100%',

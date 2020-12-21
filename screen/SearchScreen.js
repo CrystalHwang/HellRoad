@@ -9,12 +9,12 @@ import { getLatLngFromAddress, getRoutesFromAPIs } from '../api';
 
 import SearchBar from '../components/SearchBar';
 import Map from '../components/Map';
+import RouteNoticeBoard from '../components/RouteNoticeBoard';
 import * as actions from '../actions';
 
 const { width, height } = Dimensions.get('window');
 
 const SearchScreen = ({ navigation }) => {
-  //const currentLocation = useSelector(state => state.locationReducer.current);
   const originLocation = useSelector(state => state.locationReducer.origin);
   const destinationLocation = useSelector(state => state.locationReducer.destination);
   const isLoadingRoutes = useSelector(state => state.loadingReducer.routes);
@@ -50,9 +50,7 @@ const SearchScreen = ({ navigation }) => {
     if (!isClickedSearchButton) return;
 
     (async () => {
-      console.log('따뜻한겨울');
       const routes = await getRoutesFromAPIs(originLocation, destinationLocation, originName, destinationName);
-      //console.log("ROUTES", routes);
 
       dispatch(actions.updateMapBoxRoute(routes.mapBox));
       dispatch(actions.updateMapQuestRoute(routes.mapQuest));
@@ -160,16 +158,19 @@ const SearchScreen = ({ navigation }) => {
                   onPress={handleClickSearchButton} />
               </View>
             </View>
-            : <View style={styles.navigationStautsBar}>
-              {console.log("시간!!", navigationDistance, navigationDuration)}
-              <Button
-                title='안내 취소'
-                onPress={handleClickNavigationCancelButton}></Button>
-              <View style={styles.navigationStatus}>
-                <Text>예상 소요 시간 약 {navigationDuration}분</Text>
-                <Text>예상 거리 {navigationDistance / 1000} km</Text>
-              </View>
-            </View>
+            // : <View style={styles.navigationStautsBar}>
+            //   <Button
+            //     title='안내 취소'
+            //     onPress={handleClickNavigationCancelButton}></Button>
+            //   <View style={styles.navigationStatus}>
+            //     <Text>예상 소요 시간 약 {navigationDuration}분</Text>
+            //     <Text>예상 거리 {navigationDistance / 1000} km</Text>
+            //   </View>
+            // </View>
+            : <RouteNoticeBoard
+              handleClickNavigationCancelButton={handleClickNavigationCancelButton}
+              navigationDuration={navigationDuration}
+              navigationDistance={navigationDistance} />
           }
           <View
             style={styles.mapContainer}
@@ -190,7 +191,8 @@ const SearchScreen = ({ navigation }) => {
               isShowLoadingSpinner={isShowLoadingSpinner}
               isDoneGettingRouteData={isDoneGettingRouteData}
               isDoneToNavigate={isDoneToNavigate}
-              setIsDoneSaveDangerData={setIsDoneSaveDangerData} />
+              setIsDoneSaveDangerData={setIsDoneSaveDangerData}
+              handleClickNavigationCancelButton={handleClickNavigationCancelButton} />
           </View>
           {
             isDoneGettingRouteData && mapModeInStore === MAP_MODE.SEARCH
@@ -279,6 +281,14 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   startButtonText: {
     fontWeight: 'bold',

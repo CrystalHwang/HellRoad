@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, Dimensions, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
+import { COLOR } from '../constants';
+
 const { width, height } = Dimensions.get('window');
 
 const MenuIcon = ({ navigation }) => {
@@ -24,7 +26,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 20,
-    color: 'white',
+    color: COLOR.WHITE,
   }
 });
 

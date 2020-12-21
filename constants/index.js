@@ -6,12 +6,15 @@ export const COLOR = {
   LIGHT_GREY: '#efefef',
   MAIN_GREY: '#bdbdbd',
   DARK_GREY: '#8d8d8d',
+  CLEAR_GREY: 'rgba(140, 140, 140, 0.6)',
   LIGHT_BLUE: '#5472d3',
   MAIN_BLUE: '#0d47a1',
   DARK_BLUE: '#002171',
   CLEAR_BLUE: 'rgba(84, 114, 210, 0.2)',
   WHITE: '#fafafa',
 };
+
+export const BACKGROUND_COLOR = ['#49020B', '#f9a825', '#006064', '#424242'];
 
 export const DEFAULT_LOCATION = {
   latitude: 37.5695686,
@@ -40,8 +43,9 @@ export const MESSAGE = {
   PERMISSION_DENIED: '위치 정보가 필요해요! 🌎',
   DEPARTURE_SKIPPED: '출발지를 입력하세요!',
   DESTINATION_SKIPPED: '도착지를 입력하세요!',
-  ARRIVE_IN_DANGER_LOCATION: '다 왔어요! 힘내세요 🏃🏻‍♀️ 조심, 조심, 목적지 주변이 위험해요 😷',
-  ARRIVE_IN_SAFE_LOCATION: '다 왔어요! 힘내세요 🏃🏻‍♀️ 목적지 주변이 안전합니다 😄',
+  ARRIVE: '다 왔어요! 힘내세요 🏃🏻‍♀️',
+  ARRIVE_IN_DANGER_LOCATION: '목적지 주변이 위험해요 😷,  조심!',
+  ARRIVE_IN_SAFE_LOCATION: '목적지 주변이 안전합니다 😄',
 };
 
 export const APIs = {

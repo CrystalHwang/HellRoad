@@ -88,10 +88,10 @@ export const convertedToRoundedMinutes = (duration) => {
 
 export const findBoundingBoxCoordinates = (arrayOfCoords) => {
   const boundingBox = {
-    up: arrayOfCoords[0].latitude, // 위도 중에 가장 값이 큰 것
-    down: arrayOfCoords[0].latitude, // 위도 중에 가장 값이 작은 것
-    left: arrayOfCoords[0].longitude, // 경도 중에 가장  값이 작은 것
-    right: arrayOfCoords[0].longitude, // 경도 중에 가장 값이 큰 것
+    up: arrayOfCoords[0].latitude,
+    down: arrayOfCoords[0].latitude,
+    left: arrayOfCoords[0].longitude,
+    right: arrayOfCoords[0].longitude,
   };
 
   arrayOfCoords.forEach((coords, index) => {
@@ -123,12 +123,10 @@ export const getTheNearestDangerousPoint = (currentLocation, markers) => {
 
   let minDistance = Number.MAX_VALUE;
 
-  markers.forEach((marker, index) => {
-    console.log("가장 위험한 포인트 얻기위해서 계산 중입니다!!!!!!!!!!!! MARKER", marker.geometry.coordinates, "index", index);
+  markers.forEach((marker) => {
     const longitude = marker.geometry.coordinates[0];
     const latitude = marker.geometry.coordinates[1];
     const distance = getDistance(currentLocation, { latitude, longitude });
-
 
     if (minDistance > distance) {
       minDistance = distance;

@@ -1,27 +1,12 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
 import { StyleSheet, View, Dimensions, Text, Modal, TouchableHighlight } from 'react-native';
-import MapView, { Marker, Circle, Polyline } from 'react-native-maps';
 
 import * as actions from '../actions';
-import { COLOR, MESSAGE } from '../constants';
+import { COLOR } from '../constants';
+
 const { width, height } = Dimensions.get('window');
 
-const ArriveModal = ({ handleClickNavigationCancelButton, isDangerInDestination }) => {
-  const [isShowModal, setIsShowModal] = useState(true);
-  const arriveMassage = MESSAGE.ARRIVE;
-  const additionalMessage = isDangerInDestination ? MESSAGE.ARRIVE_IN_DANGER_LOCATION : MESSAGE.ARRIVE_IN_SAFE_LOCATION;
-
-  const backgroundColorOfModal = isDangerInDestination ? COLOR.MAIN_RED : COLOR.LIGHT_BLUE;
-  const colorOfModal = isDangerInDestination ? COLOR.WHITE : 'black';
-
-  const dispatch = useDispatch();
-
-  const handleClickFinishButton = () => {
-    setIsShowModal(false);
-    handleClickNavigationCancelButton();
-  };
-
+const LoadingModal = ({ }) => {
   return (
     <View style={styles.modalContainer}>
       <Modal
@@ -109,4 +94,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ArriveModal;
+export default LoadingModal;

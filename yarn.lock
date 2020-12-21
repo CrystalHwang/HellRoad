@@ -5910,6 +5910,15 @@ react-native-animatable@1.3.3:
   dependencies:
     prop-types "^15.7.2"
 
+react-native-animated-background-color-view@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-animated-background-color-view/-/react-native-animated-background-color-view-1.3.0.tgz#8fa4f07c6a79d6376029e6946550712e17ce17e9"
+  integrity sha512-/lYyAZzEPdeNhxkq9UXXtik1AuwOqAuJhpjgM8p3kV6zzpbIJKy1+QuViXqknfYhrzJm2P0HCey/HoFTRM1mDw==
+  dependencies:
+    color "^3.1.2"
+    lodash.isequal "^4.5.0"
+    prop-types "^15.7.2"
+
 react-native-awesome-alerts@^1.4.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/react-native-awesome-alerts/-/react-native-awesome-alerts-1.4.2.tgz#197c61a403bbe0bda8d4ddf7c9eaf41bba03f321"

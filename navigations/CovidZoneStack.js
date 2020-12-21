@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 const CovidZoneStack = createStackNavigator();
