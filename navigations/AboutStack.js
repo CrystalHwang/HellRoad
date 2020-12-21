@@ -1,14 +1,48 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+
+import AboutScreen from '../screen/AboutScreen';
+import MenuIcon from '../components/MenuIcon';
+
+import { COLOR } from '../constants';
+
+const { width, height } = Dimensions.get('window');
 
 const AboutStack = createStackNavigator();
 
-const AboutStackNavigator = () => {
+AboutStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
+
+const AboutStackNavigator = ({ navigation }) => {
 
   return (
-    <AboutStack.Navigator>
-      <Text>About</Text>
+    <AboutStack.Navigator
+      navigationOptions={{
+        tabBarVisible: false
+      }}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: COLOR.DARK_GREY,
+          height: height * 0.1,
+        },
+        headerTintColor: COLOR.WHITE,
+        headerLeft: () => <MenuIcon navigation={navigation} />,
+      }}>
+      <AboutStack.Screen
+        name="Crystl Hwang"
+        component={AboutScreen}
+        options={{
+          headerTintColor: COLOR.WHITE
+        }} />
     </AboutStack.Navigator>
   );
 };

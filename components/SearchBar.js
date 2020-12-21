@@ -16,93 +16,50 @@ const SearchBar = () => {
   const [departure, setDeparture] = useState('');
   const [destination, setDestination] = useState('');
 
-  useEffect(() => {
-    console.log("출발지 입력 중 :", departure);
-  }, [departure]);
-
-
   return (
-    <>
-      <GooglePlacesAutocomplete
-        placeholder='출발지'
-        minLength={2}
-        debounce={150}
-
-        enablePoweredByContainer={true}
-        currentLocation={true}
-        currentLocationLabel='현재 위치'
-        textInputProps={{
-          InputComp: TextInput,
-          onChangeText: text => setDeparture(text),
-          errorStyle: { color: 'red' },
-        }}
-        nearbyPlacesAPI="GooglePlacesSearch"
-        GooglePlacesSearchQuery={{
-          rankby: 'distance',
-        }}
-        query={{
-          key: GOOGLE_API_KEY,
-          language: 'ko',
-        }}
-        styles={{
-          container: {
-            width: '100%',
-            height: '100%',
-          },
-          textInputContainer: {
-
-          },
-          textInput: {
-            width: '100%',
-          },
-          listView: {
-            zIndex: 20,
-            backgroundColor: 'red',
-          },
-          row: {
-            zIndex: 4,
-            backgroundColor: 'green',
-          },
-          seperator: {
-            color: 'purple',
-          }
-
-        }}
-      />
-      {/* <GooglePlacesAutocomplete
-        placeholder='도착지'
-        minLength={2}
-        debounce={150}
-        textInputProps={{
-          InputComp: TextInput,
-          onChangeText: text => setDestination(text),
-          errorStyle: { color: 'red' },
-        }}
-        //autoFocus={true}
-        fetchDetails={true}
-        enablePoweredByContainer={false}
-        currentLocation={true}
-        currentLocationLabel='현재 위치'
-        nearbyPlacesAPI="GooglePlacesSearch"
-        GooglePlacesSearchQuery={{
-          rankby: 'distance',
-        }}
-        query={{
-          key: GOOGLE_API_KEY,
-          language: 'ko',
-        }}
-        styles={{
-          container: {
-            width: '100%',
-            height: '100%'
-          },
-          textInputContainer: {
-            width: '100%',
-            height: '100%'
-          }
-        }}
-      /> */}
-    </>
+    <GooglePlacesAutocomplete
+      placeholder='출발지'
+      minLength={2}
+      debounce={150}
+      enablePoweredByContainer={true}
+      currentLocation={true}
+      currentLocationLabel='현재 위치'
+      textInputProps={{
+        InputComp: TextInput,
+        onChangeText: text => setDeparture(text),
+        errorStyle: { color: 'red' },
+      }}
+      nearbyPlacesAPI="GooglePlacesSearch"
+      GooglePlacesSearchQuery={{
+        rankby: 'distance',
+      }}
+      query={{
+        key: GOOGLE_API_KEY,
+        language: 'ko',
+      }}
+      styles={{
+        container: {
+          width: '100%',
+          height: '100%',
+        },
+        textInputContainer: {
+        },
+        textInput: {
+          width: '100%',
+        },
+        listView: {
+          zIndex: 20,
+          backgroundColor: 'red',
+        },
+        row: {
+          zIndex: 4,
+          backgroundColor: 'green',
+        },
+        seperator: {
+          color: 'purple',
+        }
+      }}
+    />
   );
 };
 

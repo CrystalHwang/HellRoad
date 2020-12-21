@@ -13,7 +13,7 @@ const OptimalRoute = () => {
   const tMapExceptStairs = useSelector(state => state.routesReducer.tMapExceptStairs);
 
   const optimalRoute = useSelector(state => state.navigationReducer.nameOfAPI);
-  console.log("OPTIMAL ROUTE", optimalRoute);
+
   switch (optimalRoute) {
     case APIs.MAP_BOX:
       return (

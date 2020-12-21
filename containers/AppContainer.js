@@ -1,5 +1,4 @@
 import 'react-native-gesture-handler';
-//import { StatusBar } from 'expo-status-bar';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -23,6 +22,7 @@ import { GRANTED, MESSAGE, BACKGROUND_LOCATION_TASK, COLOR } from '../constants'
 import * as actions from '../actions';
 
 const { width, height } = Dimensions.get('window');
+
 const Drawer = createDrawerNavigator();
 
 const getPermission = async () => {
@@ -33,23 +33,17 @@ const getPermission = async () => {
   if (status !== GRANTED) {
     return alert(MESSAGE.PERMISSION_DENIED);
   }
-  console.log("STATUS", status, expires);
 };
 
 const AppContainer = () => {
   const [isLoading, setIsLoading] = useState(true);
-
-  const currentLocation = useSelector(state => state.locationReducer.current);
   const dispatch = useDispatch();
 
   TaskManager.defineTask(BACKGROUND_LOCATION_TASK, ({ data, error }) => {
-    if (error) {
-      return alert(error.message);
-    }
+    if (error) return alert(error.message);
 
     const { latitude, longitude } = data.locations[0].coords;
-    console.log("Appstate", AppState.currentState);
-    console.log("LOCATION?!!", latitude, longitude);
+
     dispatch(actions.updateCurrentLocation({ 'latitude': latitude, 'longitude': longitude }));
   });
 
@@ -80,8 +74,7 @@ const AppContainer = () => {
     return (
       <AppLoading
         startAsync={getPermission}
-        onFinish={() => setIsLoading(false)}
-      />
+        onFinish={() => setIsLoading(false)} />
     );
   }
 

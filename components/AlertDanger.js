@@ -10,7 +10,9 @@ const AlertDanger = () => {
       await sound.loadAsync(require('../assets/AlertDanger.mp3'));
       await sound.setIsLoopingAsync(true);
       await sound.playAsync();
+
       Vibration.vibrate([100, 100, 100, 100, 100, 1000], true);
+
     })();
 
     return () => {
