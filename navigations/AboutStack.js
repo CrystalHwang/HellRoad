@@ -38,7 +38,7 @@ const AboutStackNavigator = ({ navigation }) => {
         headerLeft: () => <MenuIcon navigation={navigation} />,
       }}>
       <AboutStack.Screen
-        name="Crystl Hwang"
+        name="Crystal Hwang"
         component={AboutScreen}
         options={{
           headerTintColor: COLOR.WHITE
