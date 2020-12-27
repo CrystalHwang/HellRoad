@@ -19,7 +19,6 @@ const Route = () => {
   const mapMode = useSelector(state => state.mapModeReducer);
 
   const [isMark, setIsMark] = useState(originLocation && destinationLocation ? true : false);
-  console.log("값 있어야 합니다", isMark);
 
   return (
     isMark && mapMode === MAP_MODE.SEARCH && isStartNavigate && !isFinishNavigate
